@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -20,7 +19,6 @@ public class LineChartActivity extends AppCompatActivity {
     private LineChart mLineChart;
     private LineData mLineData;
     private LineDataSet mLineDataSet;
-    private List<Entry> mListEntry;
     private Runnable mRunnable;
     private Handler mHandler;
     private int i = 0;
@@ -29,26 +27,13 @@ public class LineChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_chart);
         mLineChart = findViewById(R.id.mp_chart_line);
-        settingChart();
-        mListEntry = new ArrayList<Entry>();
-        mLineData = new LineData();
-        mLineDataSet = new LineDataSet(mListEntry,"LineChart");
-        mLineDataSet.setHighlightEnabled(true);
-        mLineDataSet.setHighLightColor(Color.parseColor("#FF0000"));
-        mLineData.addDataSet(mLineDataSet);
-        mLineChart.setData(mLineData);
+        MpChart.lineMpChart(mLineChart,true,0,0);
         initRunnable();
     }
 
     private void addEntryPoint() {
-        mListEntry.add(new Entry(i,(float)Math.random() * 10));
-        mLineDataSet.notifyDataSetChanged();
-        if(mLineDataSet.getEntryCount() > 50){
-            mLineDataSet.removeFirst();
-        }
-        mLineData.notifyDataChanged();
-        mLineChart.notifyDataSetChanged();
-        mLineChart.moveViewToX(i);
+        float random = (float)(Math.random() * 10);
+        MpChart.lineMpChart(mLineChart,false,i,random);
         i++;
     }
 
@@ -64,22 +49,5 @@ public class LineChartActivity extends AppCompatActivity {
         };
         mHandler.postDelayed(mRunnable,100);
     }
-
-    private void settingChart() {
-        mLineChart.setTouchEnabled(true);
-        mLineChart.setDragEnabled(true);
-        mLineChart.setScaleEnabled(true);
-        //mLineChart.setScaleXEnabled(true);
-        //mLineChart.setScaleYEnabled(true);
-        mLineChart.setPinchZoom(false);
-        mLineChart.setDoubleTapToZoomEnabled(false);
-        mLineChart.setDragDecelerationEnabled(true);
-        mLineChart.setDragDecelerationFrictionCoef(0.9f);
-        mLineChart.getAxisRight().setEnabled(false);//取消右边y轴;
-        mLineChart.setHighlightPerDragEnabled(true);
-        mLineChart.setHighlightPerTapEnabled(true);
-        mLineChart.setMaxHighlightDistance(500f);
-    }
-
 
 }
