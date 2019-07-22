@@ -2,6 +2,7 @@ package com.example.mpandroid;
 
 import android.graphics.Color;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -17,9 +18,11 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,14 +152,19 @@ public class MpChart {
         IPieDataSet iPieDataSet;
         if (pieData == null) {
             pieData = new PieData();
-            iPieDataSet = createPieSet();
-            pieData.setDataSet(iPieDataSet);
-            pieChart.setData(pieData);
-
             pieChart.setUsePercentValues(true);
+            pieChart.setDrawHoleEnabled(true);
+            pieChart.setDrawCenterText(true);
+            pieChart.setCenterText("MPAndroid Test");
+            pieChart.animateY(1400, Easing.EaseInOutQuad);
             pieChart.setExtraOffsets(5, 10, 5, 5);
             pieChart.setHoleRadius(58f);
             pieChart.setTransparentCircleRadius(61f);
+            iPieDataSet = createPieSet(pieChart);
+            pieData.setDataSet(iPieDataSet);
+            pieData.setValueTextColor(Color.WHITE);
+            pieData.setValueTextSize(14);
+            pieChart.setData(pieData);
         } else {
             iPieDataSet = pieData.getDataSetByIndex(0);
             iPieDataSet.addEntry(new PieEntry(value, name));
@@ -166,9 +174,27 @@ public class MpChart {
     }
 
 
-    private static PieDataSet createPieSet() {
+    private static PieDataSet createPieSet(PieChart pieChart) {
 
         PieDataSet pieDataSet = new PieDataSet(null, "PieChart");
+        List<Integer> colors = new ArrayList<>();
+        pieDataSet.setSliceSpace(5f);
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+        pieDataSet.setColors(colors);
+        pieDataSet.setValueFormatter(new PercentFormatter(pieChart));
         return pieDataSet;
     }
 

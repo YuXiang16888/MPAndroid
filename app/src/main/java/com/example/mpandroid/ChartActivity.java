@@ -1,50 +1,64 @@
 package com.example.mpandroid;
 
-import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class LineChartActivity extends AppCompatActivity {
+public class ChartActivity extends AppCompatActivity {
 
     private LineChart mLineChart;
     private BarChart mBarChart;
     private PieChart mPieChart;
     private Runnable mRunnable;
     private Handler mHandler;
+    private String mChartName;
+    private boolean initFlag;
     private int i = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_line_chart);
+        setContentView(R.layout.activity_chart);
+        mChartName = getIntent().getStringExtra("ChartMode");
         mLineChart = findViewById(R.id.mp_chart_line);
         mBarChart = findViewById(R.id.mp_chart_bar);
         mPieChart = findViewById(R.id.mp_chart_pie);
-        mLineChart.setVisibility(View.GONE);
-        mBarChart.setVisibility(View.GONE);
-        //MpChart.lineMpChart(mLineChart,0,0);
-        //MpChart.barMpChart(mBarChart,0,0);
-        MpChart.pieMpChart(mPieChart,"",0);
+        processChart();
         initRunnable();
+    }
+
+
+    private void processChart(){
+
+        if(mChartName.equals("Line Chart")){
+            mBarChart.setVisibility(View.GONE);
+            mPieChart.setVisibility(View.GONE);
+            MpChart.lineMpChart(mLineChart,0,0);
+        }else if(mChartName.equals("Bar Chart")){
+            mLineChart.setVisibility(View.GONE);
+            mPieChart.setVisibility(View.GONE);
+            MpChart.barMpChart(mBarChart,0,0);
+        }else if (mChartName.equals("Pie Chart")){
+            mLineChart.setVisibility(View.GONE);
+            mBarChart.setVisibility(View.GONE);
+            MpChart.pieMpChart(mPieChart,"",0);
+        }
     }
 
     private void addEntryPoint() {
         float random = (float)(Math.random() * 10 + 2);
-        //MpChart.lineMpChart(mLineChart,i,random);
-        //MpChart.barMpChart(mBarChart,i,random);
-        MpChart.pieMpChart(mPieChart,"Part" + i,random);
+        if(mChartName.equals("Line Chart")){
+            MpChart.lineMpChart(mLineChart,i,random);
+        }else if(mChartName.equals("Bar Chart")){
+            MpChart.barMpChart(mBarChart,i,random);
+        }else if (mChartName.equals("Pie Chart")){
+            MpChart.pieMpChart(mPieChart,"Part" + i,random);
+        }
         i++;
     }
 
